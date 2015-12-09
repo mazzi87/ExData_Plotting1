@@ -1,0 +1,15 @@
+data <- read.table("household_power_consumption.txt", header = TRUE, sep = ";", na.strings = "?")
+data$Date <- as.Date(data$Date, format ="%d/%m/%Y")
+data_mod <- subset(data, Date == "2007-02-01" | Date == "2007-02-02")
+string <- (paste(as.character(data_mod$Date), data_mod$Time))
+data_mod$New_date <- as.POSIXct(string)
+
+### PLOT 3 ###
+with(data_mod, plot(New_date, Sub_metering_1, xlab="", ylab = "Energy sub metering", type = "n", yaxt='n'))
+lines(data_mod$New_date, data_mod$Sub_metering_1, col = "black")
+lines(data_mod$New_date, data_mod$Sub_metering_2, col = "red")
+lines(data_mod$New_date, data_mod$Sub_metering_3, col = "blue")
+axis(side=2, at=c(0,10,20,30), labels= c(0,10,20,30))
+legend("topright", legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), lty=c(1,1,1), col = c("black", "red", "blue"), cex = 0.75)
+dev.copy(png, file = "plot3.png", width = 480, height = 480)
+dev.off()
